@@ -12,51 +12,44 @@ type
     Panel2: TPanel;
     GroupBox2: TGroupBox;
     Label4: TLabel;
-    Label5: TLabel;
-    Label6: TLabel;
     edtDirArquivo: TEdit;
-    edtDirConfiguracao: TEdit;
-    edtDirErro: TEdit;
-    GroupBox1: TGroupBox;
-    Label1: TLabel;
-    Label2: TLabel;
-    edtCNPJ: TEdit;
-    edtToken: TEdit;
-    GroupBox3: TGroupBox;
-    Label8: TLabel;
-    Label9: TLabel;
-    Label7: TLabel;
-    edtDataIni: TDateTimePicker;
-    edtDataFim: TDateTimePicker;
-    edtNomeArquivo: TEdit;
     Panel1: TPanel;
     Label3: TLabel;
     edtCNPJEmissor: TEdit;
     GroupBox4: TGroupBox;
     edtProtocolo: TEdit;
-    Panel4: TPanel;
-    Panel3: TPanel;
-    sbPreencherComp: TSpeedButton;
-    sbIniciarApuracao: TSpeedButton;
+    sbLimpar: TSpeedButton;
+    edtDataIni: TDateTimePicker;
+    Label8: TLabel;
+    Label9: TLabel;
+    edtDataFim: TDateTimePicker;
+    Label7: TLabel;
+    edtNomeArquivo: TEdit;
+    edtCNPJ: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    edtToken: TEdit;
     pcProcessos: TPageControl;
     tsApuracao: TTabSheet;
     gbRetornoApuracao: TGroupBox;
     mmApuracao: TMemo;
-    sbGerarTX2: TSpeedButton;
-    tsTX2: TTabSheet;
-    GroupBox5: TGroupBox;
-    mmTX2: TMemo;
-    sbEnviar: TSpeedButton;
-    tsRetornoEnvio: TTabSheet;
-    GroupBox6: TGroupBox;
-    mmRetornoEnvio: TMemo;
-    sbGerarApuracao: TSpeedButton;
     GroupBox7: TGroupBox;
     mmGerarApuracao: TMemo;
     GroupBox8: TGroupBox;
     mmConsultaApuracao: TMemo;
+    tsTX2: TTabSheet;
+    GroupBox5: TGroupBox;
+    mmTX2: TMemo;
+    tsRetornoEnvio: TTabSheet;
+    GroupBox6: TGroupBox;
+    mmRetornoEnvio: TMemo;
+    Panel3: TPanel;
+    sbPreencherComp: TSpeedButton;
+    sbIniciarApuracao: TSpeedButton;
+    sbGerarTX2: TSpeedButton;
+    sbEnviar: TSpeedButton;
+    sbGerarApuracao: TSpeedButton;
     sbConsultarApuracao: TSpeedButton;
-    sbLimpar: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure sbPreencherCompClick(Sender: TObject);
@@ -67,13 +60,11 @@ type
     procedure sbConsultarApuracaoClick(Sender: TObject);
     procedure sbLimparClick(Sender: TObject);
   private
-    procedure CarregarIniSPED;
     procedure Limpar;
     { Private declarations }
   public
     { Public declarations }
     vSpedFiscal : TspdSpedClientX;
-    vArquivoIni : TIniFile;
   end;
 
 var
@@ -95,16 +86,6 @@ implementation
 ===============================================================================
 }
 
-procedure TfrmSpedPrincipal.CarregarIniSPED;
-begin
-  edtCNPJ.Text         := vArquivoIni.ReadString('SPED','CNPJSH','');
-  edtTOKEN.Text        := vArquivoIni.ReadString('SPED','TOKENSH','');
-  edtCNPJEmissor.Text  := vArquivoIni.ReadString('SPED','CNPJEMISSOR','');
-
-  edtDirArquivo.Text      := vArquivoIni.ReadString('DIRETORIOS','ARQUIVO','');
-  edtDirConfiguracao.Text := vArquivoIni.ReadString('DIRETORIOS','CONFIGURACAO','');
-  edtDirErro.Text         := vArquivoIni.ReadString('DIRETORIOS','ERRO','');
-end;
 
 procedure TfrmSpedPrincipal.Limpar;
 begin
@@ -113,7 +94,6 @@ end;
 procedure TfrmSpedPrincipal.FormCreate(Sender: TObject);
 begin
   vSpedFiscal              := TspdSpedClientX.Create(nil);
-  vArquivoIni              := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
 
   frmSpedPrincipal.Caption := 'Demonstração SpedFiscal - TecnoSpeed';
 end;
@@ -122,8 +102,6 @@ procedure TfrmSpedPrincipal.FormShow(Sender: TObject);
 begin
   edtDataIni.DateTime := StartOfTheMonth(Date);
   edtDataFim.DateTime := EndOfTheMonth(Date);
-
-  CarregarIniSPED;
 end;
 
 procedure TfrmSpedPrincipal.sbPreencherCompClick(Sender: TObject);
@@ -135,7 +113,7 @@ begin
     vSpedFiscal.DataFim               := DateToStr(edtDataFim.Date);
     vSpedFiscal.CnpjEmissor           := edtCNPJEmissor.Text;
     vSpedFiscal.DiretorioArquivo      := edtDirArquivo.Text;
-    vSpedFiscal.DiretorioConfiguracao := edtDirConfiguracao.Text;
+    vSpedFiscal.DiretorioConfiguracao := edtDirArquivo.Text;
 
     ShowMessage('Configurado com sucesso.');
 
@@ -262,8 +240,6 @@ begin
   mmRetornoEnvio.Lines.Clear;
   mmGerarApuracao.Lines.Clear;
   mmConsultaApuracao.Lines.Clear;
-
-  CarregarIniSPED; 
 end;
 
 end.
